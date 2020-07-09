@@ -96,6 +96,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.elasticsearch.xpack.ql.util.CollectionUtils.combine;
 import static org.elasticsearch.xpack.sql.expression.function.grouping.Histogram.DAY_INTERVAL;
 import static org.elasticsearch.xpack.sql.expression.function.grouping.Histogram.MONTH_INTERVAL;
+import static org.elasticsearch.xpack.sql.expression.function.grouping.Histogram.SEMESTER_INTERVAL;
 import static org.elasticsearch.xpack.sql.expression.function.grouping.Histogram.YEAR_INTERVAL;
 import static org.elasticsearch.xpack.sql.planner.QueryTranslator.toAgg;
 import static org.elasticsearch.xpack.sql.planner.QueryTranslator.toQuery;
@@ -341,6 +342,17 @@ class QueryFolder extends RuleExecutor<PhysicalPlan> {
                                         key = new GroupByDateHistogram(aggId, QueryTranslator.nameOf(field), calendarInterval, h.zoneId());
                                     } else if (field instanceof Function) {
                                         key = new GroupByDateHistogram(aggId, ((Function) field).asScript(), calendarInterval, h.zoneId());
+                                    }
+                                }
+                                // interval of exactly 1 semester
+                                else if (value instanceof IntervalYearMonth
+                                        && ((IntervalYearMonth) value).interval().equals(Duration.ofMonths(6))) {
+                                    // When the histogram is `INTERVAL '1' SEMESTER` the interval used in
+                                    // the ES date_histogram will be a calendar_interval with value "2q"
+                                    if (field instanceof FieldAttribute) {
+                                        key = new GroupByDateHistogram(aggId, QueryTranslator.nameOf(field), SEMESTER_INTERVAL, h.zoneId());
+                                    } else if (field instanceof Function) {
+                                        key = new GroupByDateHistogram(aggId, ((Function) field).asScript(), SEMESTER_INTERVAL, h.zoneId());
                                     }
                                 }
                                 // interval of exactly 1 day

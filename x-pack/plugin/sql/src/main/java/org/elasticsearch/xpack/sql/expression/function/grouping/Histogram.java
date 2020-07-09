@@ -30,6 +30,7 @@ public class Histogram extends GroupingFunction {
     private final Literal interval;
     private final ZoneId zoneId;
     public static String YEAR_INTERVAL = DateHistogramInterval.YEAR.toString();
+    public static String SEMESTER_INTERVAL = DateHistogramInterval.SEMESTER.toString();
     public static String MONTH_INTERVAL = DateHistogramInterval.MONTH.toString();
     public static String DAY_INTERVAL = DateHistogramInterval.DAY.toString();
 

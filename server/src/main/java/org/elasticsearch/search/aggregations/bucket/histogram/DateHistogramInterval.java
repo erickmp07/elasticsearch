@@ -43,6 +43,7 @@ public class DateHistogramInterval implements Writeable, ToXContentFragment {
     public static final DateHistogramInterval WEEK = new DateHistogramInterval("1w");
     public static final DateHistogramInterval MONTH = new DateHistogramInterval("1M");
     public static final DateHistogramInterval QUARTER = new DateHistogramInterval("1q");
+    public static final DateHistogramInterval SEMESTER = new DateHistogramInterval("2q");
     public static final DateHistogramInterval YEAR = new DateHistogramInterval("1y");
 
     public static DateHistogramInterval seconds(int sec) {
